@@ -12,6 +12,10 @@ app.post("/push_notification_web_order_details", (req, res) => {
     const { webOrderDetails }  = req.body
 
     sendWebOrder(webOrderDetails)
+
+    res.json({
+        body: webOrderDetails.body
+    })
 })
 
 process.once('SIGUSR2', 
