@@ -1,4 +1,4 @@
-import { sendNotification } from "./push_notification.js"
+import { sendWebOrder } from "./push_notification.js"
 import express from "express"
 
 const app = express()
@@ -18,14 +18,12 @@ app.use(express.json())
 app.post("/push_notification_web_order_details", (req, res) => {
     const { webOrderDetails }  = req.body
 
-    let title = "this is notif title"
-    let body = "this is notif body"
-    let orderNo = webOrderDetails.orderNo
+    let title = webOrderDetails.title
+    let body = webOrderDetails.body
 
-    sendNotification()
+    sendWebOrder(webOrderDetails)
 
     res.json({
-        orderNo : orderNo,
         title: title,
         body: body
     })
@@ -46,5 +44,3 @@ process.on('SIGINT', function () {
 app.listen(PORT, () => {
     console.log(`Server started ${PORT}`)
 })
-
-sendNotification()
