@@ -1,19 +1,14 @@
 import axios from "axios"
 import https from "https"
-import key from './firebase-service-account.json' assert {type: "json"}
+import key from './secrets/firebase-service-account.json' assert {type: "json"}
 import { google } from "googleapis"
-import { title } from "process"
-import { Console } from "console"
 
-const fcmURI = "https://fcm.googleapis.com/v1/projects/metamorph-2f9b7/messages:send"
 const PROJECT_ID = "metamorph-2f9b7"
 const HOST = "fcm.googleapis.com"
 var PATH = `/v1/projects/${PROJECT_ID}/messages:send`
 var SCOPES = [
     "https://www.googleapis.com/auth/firebase.messaging"
   ];
-// const { accessToken }  = await getAccessToken()
-
 
 function getAccessToken() {
     return new Promise(function(resolve, reject) {
@@ -33,6 +28,7 @@ function getAccessToken() {
         });
    });
 }
+
 function buildCommonMessage() {
     return {
       'message': {
@@ -46,7 +42,6 @@ function buildCommonMessage() {
   }
 
 export function sendNotification() {
-
     getAccessToken().then(function(accessToken) {
         var options = {
             hostname: HOST,
@@ -56,7 +51,6 @@ export function sendNotification() {
                 'Content-Type': 'application/json',
                 "Authorization": "Bearer " + accessToken
             },
-            // … plus the body of your notification or data message
         };
         var request = https.request(options, function(resp) {
             resp.setEncoding("utf8");

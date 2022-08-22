@@ -1,11 +1,5 @@
 import { sendNotification } from "./push_notification.js"
-import key from './firebase-service-account.json' assert {type: "json"}
 import express from "express"
-import admin  from "firebase-admin"
-import { applicationDefault, initializeApp } from 'firebase-admin/app';
-
-import { google } from "googleapis"
-
 
 const app = express()
 
@@ -13,12 +7,6 @@ const PORT = 3000
   
 
 app.use(express.json())
-
-// initializeApp({
-//     credential: admin.credential.cert(key),
-//   });
-
-  
   
 // post request
 // what data needs to be sent through body?
