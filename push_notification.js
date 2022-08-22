@@ -32,7 +32,7 @@ function getAccessToken() {
 function buildCommonMessage() {
     return {
       'message': {
-        'token': 'eLZkvK4jTmewLZHFhlrxaM:APA91bF_FooWvZG_jCXw31R0MQlGJt9TNlraJoVD25xXPZFhWEabPopwLGukKb1Aqumy-e9B1p7yZDykoqfuhlQZHfQaRsJn7HssqS-TD49pL_sxlVU99rC-uikDCg9qcZj4QiGvFUPr',
+        'topic': 'weather',
         'notification': {
           'title': 'FCM Notification',
           'body': 'Notification from FCM',
