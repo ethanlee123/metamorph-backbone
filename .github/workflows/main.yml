@@ -44,10 +44,11 @@ jobs:
 
     steps:
       # Work around for actions/checkout@v2 error: https://github.com/actions/checkout/issues/590 & https://github.com/actions/checkout/issues/385
-      - name: Clear repository
-        run: sudo rm -fr $GITHUB_WORKSPACE && mkdir $GITHUB_WORKSPACE
+      # - name: Clear repository
+      #   run: sudo rm -fr $GITHUB_WORKSPACE && mkdir $GITHUB_WORKSPACE
       
-      - uses: actions/checkout@v3
+      uses: actions/checkout@v3
+
       - name: Use Node.js ${{ matrix.node-version }}
 
         # Setup the hosting environment with the node version of our choice (if we have NodeJS install in the node env, this is not mandatory)
