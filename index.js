@@ -8,13 +8,9 @@ const PORT = 3000
 
 app.use(express.json())
   
-app.post("/push_notification_web_order_details", (req, res) => {
-    const { webOrderDetails }  = req.body
-
-    sendWebOrder(webOrderDetails)
-
+app.post("/test", (req, res) => {
     res.json({
-        body: webOrderDetails.body
+        Response: "NodeJs script is working"
     })
 })
 
@@ -26,7 +22,7 @@ process.once('SIGUSR2',
 
 process.on('SIGINT', function () {
     // this is only called on ctrl+c, not restart
-    process.kill(process.pid, 'SIGINT');
+    process.kill(process.pid, 'SIGKILL');
 })
 
 
