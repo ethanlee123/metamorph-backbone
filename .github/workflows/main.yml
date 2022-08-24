@@ -47,7 +47,7 @@ jobs:
       - name: Clear repository
         run: sudo rm -fr $GITHUB_WORKSPACE && mkdir $GITHUB_WORKSPACE
       
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
 
         # Setup the hosting environment with the node version of our choice (if we have NodeJS install in the node env, this is not mandatory)
