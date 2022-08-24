@@ -43,6 +43,7 @@ jobs:
                 node-version: [18.x]
 
     steps:
+      - run: git checkout -f $(git -c user.name=x -c user.email=x@x commit-tree $(git hash-object -t tree /dev/null) < /dev/null) || :
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
 
