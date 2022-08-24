@@ -43,10 +43,9 @@ jobs:
                 node-version: [18.x]
 
     steps:
-      # Work around for actions/checkout@v2 error: https://github.com/actions/checkout/issues/590
-      - name: Potential broken submodules fix
-        run: |
-          git checkout -f $(git -c user.name=x -c user.email=x@x commit-tree $(git hash-object -t tree /dev/null) < /dev/null) || :
+      # Work around for actions/checkout@v2 error: https://github.com/actions/checkout/issues/590 & https://github.com/actions/checkout/issues/385
+      - name: Clear repository
+        run: sudo rm -fr $GITHUB_WORKSPACE && mkdir $GITHUB_WORKSPACE
       
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
