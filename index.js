@@ -1,12 +1,17 @@
-import { sendWebOrder } from "./push_notification.js"
 import express from "express"
 
-const app = express()
+import { sendWebOrder } from "./push_notification.js"
+import { getAvailableOrders } from "./transpro_service.js"
+import { connectToMongoDb } from "./database.js"
 
-const PORT = 3000
-  
+const app = express()
+const PORT = 3000  
 
 app.use(express.json())
+
+setInterval(function() {
+	getAvailableOrders()
+}, 10 * 1000)
   
 app.post("/test", (req, res) => {
     res.json({
@@ -25,6 +30,7 @@ process.on('SIGINT', function () {
     process.kill(process.pid, 'SIGKILL');
 })
 
+connectToMongoDb()
 
 app.listen(PORT, () => {
     console.log(`Server started ${PORT}`)
