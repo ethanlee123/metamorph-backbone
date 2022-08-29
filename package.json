@@ -17,6 +17,7 @@
     "express": "^4.18.1",
     "firebase-admin": "^11.0.1",
     "googleapis": "^107.0.0",
+    "mongodb": "^4.9.0",
     "mongoose": "^6.5.3"
   },
   "devDependencies": {
