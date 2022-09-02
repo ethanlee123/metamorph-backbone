@@ -40,3 +40,17 @@ export async function closeClient() {
     await mongoDbClient.close()
     console.log('Mongo client disconnected')
 }
+
+export async function getLatestPushedNotifications() {
+    try {
+        const pushNotifications = metamorphDb.collection("push_notifications")
+        const result = await pushNotifications.find()
+                                            .sort({$natural: -1}) // sort from most recently inserted to oldest
+                                            .limit(50) 
+                                            .toArray()
+
+        return result
+    } catch (error) {
+        console.log(error)
+    }
+}

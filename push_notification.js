@@ -24,17 +24,18 @@ function buildCommonMessage(topic, title, body) {
 
 export function sendWebOrder(webOrderDetails) {
     var commonMessage = buildCommonMessage(
-        "weather",
+        webOrderDetails.topic,
         webOrderDetails.title,
         webOrderDetails.body
-    )
+        )
+    console.log(commonMessage)
 
-    getAccessToken().then(function (accessToken) {
+    getAccessToken().then((accessToken) => {
         var options = {
             headers: {
                 'Content-Type': 'application/json',
                 "Authorization": "Bearer " + accessToken
-            },
+            }
         }
 
         axios.post(
@@ -47,5 +48,8 @@ export function sendWebOrder(webOrderDetails) {
             console.log(`Error sending push notif: ${error}`)
             return error
         })
+    }, (error) => {
+        console.log(`Error getting access token: ${error}`)
+        return error
     })
 }
