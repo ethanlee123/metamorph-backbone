@@ -3,6 +3,7 @@ import express from "express"
 import { sendWebOrder } from "./push_notification.js"
 import { getAvailableOrders } from "./transpro_service.js"
 import { connectToMongoDb, closeClient, getLatestPushedNotifications } from "./database.js"
+import { CustomError } from "./utils/CustomError.js"
 
 const app = express()
 const PORT = 3000  
@@ -37,14 +38,18 @@ app.get("/received_push_notifications", async (_, res) => {
     res.json(pushNotifications)
 })
 
-process.once('SIGUSR2', 
-    function() {
-        process.kill(process.pid, 'SIGUSR2')
-    }
-)
+app.all("*", (req, res, next) => {
+    const err = new CustomError(`Requested URL ${req.path} not found.`, 404)
+    next(err)
+})
 
-process.on('SIGINT', function () {
-    closeMongoDbClient()
+app.use((err, req, res, next) => {
+    const statusCode = err.statusCode || 500
+    res.status(404).json({
+        success: 0,
+        message: err.message,
+        stack: err.stack
+    })
 })
 
 async function closeMongoDbClient() {
@@ -61,8 +66,18 @@ async function main() {
 // }, ONE_MINUTE_IN_MS)
 }
 
-main()
 
 app.listen(PORT, () => {
+    main()
     console.log(`Server started ${PORT}`)
+})
+
+process.once('SIGUSR2', 
+    function() {
+        process.kill(process.pid, 'SIGUSR2')
+    }
+)
+
+process.on('SIGINT', function () {
+    closeMongoDbClient()
 })
