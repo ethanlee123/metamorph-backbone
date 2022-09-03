@@ -27,9 +27,8 @@ export function getAvailableOrders() {
         body,
         options
     ).then((response) => {
+        console.log("Processing web orders")
         processResponse(response)
-
-
     }, (error) => {
         console.log("Error sending push notif")
         return error

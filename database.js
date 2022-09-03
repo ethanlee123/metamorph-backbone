@@ -25,15 +25,22 @@ export async function insertMany(docs) {
     try {
         const pushNotifications = metamorphDb.collection("push_notifications")
         const result = await pushNotifications.insertMany(docs)
+        return result
     } catch (error) {
         console.log(error)
+        return error
     }
 }
 
 export async function orderNoDoesNotExist(orderno) {
-    const pushNotifications = metamorphDb.collection("push_notifications")
-    let doc = await pushNotifications.findOne({ orderNo: {$eq: orderno} }) 
-    return doc == null
+    try {
+        const pushNotifications = metamorphDb.collection("push_notifications")
+        let doc = await pushNotifications.findOne({ orderNo: {$eq: orderno} }) 
+        return doc == null
+    } catch (error) {
+        console.log(error)
+        return error
+    }
 }
 
 export async function closeClient() {
@@ -52,5 +59,6 @@ export async function getLatestPushedNotifications() {
         return result
     } catch (error) {
         console.log(error)
+        return error
     }
 }
