@@ -1,5 +1,6 @@
 import express from "express"
 import dotenv from "dotenv"
+import path from "path"
 
 import { sendWebOrder } from "./push_notification.js"
 import { getAvailableOrders } from "./transpro_service.js"
@@ -13,18 +14,32 @@ dotenv.config({ path: "./secrets/.env" })
 const app = express()
 const PORT = process.env.PORT || 3000
 const ONE_MINUTE_IN_MS = 60 * 1000
+const router = express.Router()
 
 app.use(express.json())
+app.use("/", router)
 app.use(logError)
 app.use(returnError)
+app.use((err, req, res, next) => {
+    const statusCode = err.statusCode || 500
+    res.status(404).json({
+        success: 0,
+        message: err.message,
+        stack: err.stack
+    })
+})
 
-app.post("/test", (req, res) => {
+router.get("/", (req, res) => {
+    res.sendFile(path.join(path.resolve() + "/index.html"))
+})
+
+router.post("/test", (req, res) => {
     res.json({
         Response: "NodeJs script is working"
     })
 })
 
-app.post("/send_push_notification", (req, res) => {
+router.post("/send_push_notification", (req, res) => {
     try {
         let orderNo = req.body.orderNo
         let topic = req.body.topic
@@ -44,25 +59,17 @@ app.post("/send_push_notification", (req, res) => {
     }
 })
 
-app.get("/received_push_notifications", async (_, res) => {
+router.get("/received_push_notifications", async (_, res) => {
     const pushNotifications = await getLatestPushedNotifications()
 
     res.json(pushNotifications)
 })
 
-app.all("*", (req, res, next) => {
+router.all("*", (req, res, next) => {
     const err = new BaseError(`Requested URL ${req.path} not found.`, httpStatusCodes.NOT_FOUND)
     next(err)
 })
 
-app.use((err, req, res, next) => {
-    const statusCode = err.statusCode || 500
-    res.status(404).json({
-        success: 0,
-        message: err.message,
-        stack: err.stack
-    })
-})
 
 async function closeMongoDbClient() {
     // close mongodb client when killing the app
