@@ -47,10 +47,10 @@ export async function sendWebOrder(webOrderDetails) {
             return "Successfully sent push notif"
         }, (error) => {
             console.log(`Error sending push notif: ${error}`)
-            return new BaseError(error.message, error.status)
+            throw new BaseError(error.message, error.status)
         })
     }, (error) => {
         console.log(`Error getting access token: ${error}`)
-        return new BaseError(error.message, error.status)
+        throw new BaseError(error.message, error.status)
     })
 }
