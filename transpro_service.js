@@ -1,5 +1,6 @@
 import axios from "axios"
 import { insertMany, orderNoDoesNotExist } from "./database.js"
+import { sendListOfWebOrders, sendWebOrder } from "./push_notification.js"
 
 const NUMBER_OF_WEB_ORDERS_TO_QUERY = 5
 
@@ -39,9 +40,12 @@ async function processResponse(response) {
     let topic = "weather"
 
     let allOrderNos = await getListOfOrderNosFromList(response.data)
-
+    
     let docs = createPushNotifcationDocument(allOrderNos, topic)
+    console.log("Attempting to insert push notif docs into DB")
     insertMany(docs)
+    console.log("Attempting to send push notif")
+    sendListOfWebOrders(docs)
 }
 
 // get list of order numbers from response that do not exist in database

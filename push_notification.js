@@ -54,3 +54,15 @@ export async function sendWebOrder(webOrderDetails) {
         throw new BaseError(error.message, error.status)
     })
 }
+
+export async function sendListOfWebOrders(listOfWebOrderDetails) {
+    listOfWebOrderDetails.forEach(webOrder => {
+        let webOrderDetails = {
+            "title": "New Contract Available",
+            "body": "test body",
+            "orderNo": webOrder.orderNo,
+            "topic": webOrder.topic
+        }
+        sendWebOrder(webOrderDetails)
+    })
+}
