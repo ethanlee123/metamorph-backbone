@@ -93,15 +93,3 @@ process.once('SIGUSR2',
 process.on('SIGINT', function () {
     closeMongoDbClient()
 })
-
-process.on('unhandledRejection', error => {
-    throw error
-})
-
-process.on('uncaughtException', error => {
-    logError(error)
-
-    if (!isOperationalError(error)) {
-        process.exit(1)
-    }
-})

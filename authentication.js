@@ -1,5 +1,6 @@
 import { google } from "googleapis"
-import key from './secrets/firebase-service-account.json' assert {type: "json"}
+import dotenv from "dotenv"
+dotenv.config({ path: "./secrets/.env" })
 
 var SCOPES = [
     "https://www.googleapis.com/auth/firebase.messaging"
@@ -8,9 +9,9 @@ var SCOPES = [
 export function getAccessToken() {
     return new Promise(function (resolve, reject) {
         var jwtClient = new google.auth.JWT(
-            key.client_email,
+            process.env.CLIENT_EMAIL,
             null,
-            key.private_key,
+            process.env.PRIVATE_KEY,
             SCOPES,
             null
         )
