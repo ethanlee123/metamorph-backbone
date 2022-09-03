@@ -2,6 +2,7 @@ import axios from "axios"
 import axiosRetry from "axios-retry"
 
 import { getAccessToken } from "./authentication.js"
+import { BaseError } from "./utils/BaseError.js"
 
 const PROJECT_ID = "metamorph-2f9b7"
 const FIREBASE_PUSH_NOTIF_URL = `https://fcm.googleapis.com/v1/projects/${PROJECT_ID}/messages:send`
@@ -22,7 +23,7 @@ function buildCommonMessage(topic, title, body) {
     }
 }
 
-export function sendWebOrder(webOrderDetails) {
+export async function sendWebOrder(webOrderDetails) {
     var commonMessage = buildCommonMessage(
         webOrderDetails.topic,
         webOrderDetails.title,
@@ -43,13 +44,13 @@ export function sendWebOrder(webOrderDetails) {
             commonMessage,
             options
         ).then((response) => {
-            console.log("Successfully sent push notif")
+            return "Successfully sent push notif"
         }, (error) => {
             console.log(`Error sending push notif: ${error}`)
-            return error
+            return new BaseError(error.message, error.status)
         })
     }, (error) => {
         console.log(`Error getting access token: ${error}`)
-        return error
+        return new BaseError(error.message, error.status)
     })
 }

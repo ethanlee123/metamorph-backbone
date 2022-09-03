@@ -1,6 +1,6 @@
 const httpStatusCodes = {
     OK_GET: 200, // Successful GET request
-    OK_PUT: 201, // Successful POST request
+    OK_POST: 201, // Successful POST request
     OK_PUT_PATCH: 204, // Successfull PUT or PATCH request
     BAD_REQUEST: 400, // Client should modify the request
     UNAUTHORIZED: 401, // credentials not recognized

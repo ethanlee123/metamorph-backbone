@@ -39,7 +39,7 @@ router.post("/test", (req, res) => {
     })
 })
 
-router.post("/send_push_notification", (req, res) => {
+router.post("/send_push_notification", (req, res, next) => {
     try {
         let orderNo = req.body.orderNo
         let topic = req.body.topic
@@ -49,10 +49,12 @@ router.post("/send_push_notification", (req, res) => {
             "orderNo": orderNo,
             "topic": topic
         }
-    
+        
         sendWebOrder(webOrderDetails)
-    
-        res.send("Sent push notification")
+        res.send({
+            status: httpStatusCodes.OK_POST,
+            message: "Successfully send push notif"
+        })
     } catch (error) {
         console.log(error)
         next(error)
