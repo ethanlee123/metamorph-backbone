@@ -7,6 +7,8 @@ import { BaseError } from "./utils/BaseError.js"
 const PROJECT_ID = "metamorph-2f9b7"
 const FIREBASE_PUSH_NOTIF_URL = `https://fcm.googleapis.com/v1/projects/${PROJECT_ID}/messages:send`
 
+var accessToken = null
+
 axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay, retryCondition: (error) => {
     return error.response.status === 503 || error.response.status === 429
 } })
@@ -31,26 +33,30 @@ export async function sendWebOrder(webOrderDetails) {
         )
     console.log(commonMessage)
 
-    getAccessToken().then((accessToken) => {
-        var options = {
-            headers: {
-                'Content-Type': 'application/json',
-                "Authorization": "Bearer " + accessToken
-            }
-        }
-
-        axios.post(
-            FIREBASE_PUSH_NOTIF_URL,
-            commonMessage,
-            options
-        ).then((response) => {
-            return "Successfully sent push notif"
-        }, (error) => {
-            console.log(`Error sending push notif: ${error}`)
+    if (accessToken == null) {
+        try {
+            accessToken = await getAccessToken()
+        } catch (error) {
+            console.log(`Error getting access token: ${error}`)
             throw new BaseError(error.message, error.status)
-        })
+        }
+    }
+
+    var options = {
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": "Bearer " + accessToken
+        }
+    }
+    
+    axios.post(
+        FIREBASE_PUSH_NOTIF_URL,
+        commonMessage,
+        options
+    ).then((response) => {
+        return "Successfully sent push notif"
     }, (error) => {
-        console.log(`Error getting access token: ${error}`)
+        console.log(`Error sending push notif: ${error}`)
         throw new BaseError(error.message, error.status)
     })
 }
