@@ -3,9 +3,8 @@ import { MongoClient } from "mongodb"
 import dotenv from "dotenv"
 dotenv.config({ path: "./secrets/.env" })
 
-const MONGODB_PASSWORD = process.env.MONGODB_PASSWORD
-const mongoDbURI = `mongodb+srv://ethanl:${MONGODB_PASSWORD}@cluster0.wv4nes3.mongodb.net/?retryWrites=true&w=majority`
-export const mongoDbClient = new MongoClient(mongoDbURI)
+const MONGODBURI = process.env.MONGODB_DB_URI
+export const mongoDbClient = new MongoClient(MONGODBURI)
 const metamorphDb = mongoDbClient.db("metamorphdb")
 
 export async function connectToMongoDb() {
@@ -18,7 +17,7 @@ export async function connectToMongoDb() {
 }
 
 export async function insertMany(docs) {
-    if (docs.length == 0)  {
+    if (docs.length == 0) {
         return
     }
 
@@ -35,7 +34,7 @@ export async function insertMany(docs) {
 export async function orderNoDoesNotExist(orderno) {
     try {
         const pushNotifications = metamorphDb.collection("push_notifications")
-        let doc = await pushNotifications.findOne({ orderNo: {$eq: orderno} }) 
+        let doc = await pushNotifications.findOne({ orderNo: { $eq: orderno } })
         return doc == null
     } catch (error) {
         console.log(error)
@@ -52,9 +51,9 @@ export async function getLatestPushedNotifications() {
     try {
         const pushNotifications = metamorphDb.collection("push_notifications")
         const result = await pushNotifications.find()
-                                            .sort({$natural: -1}) // sort from most recently inserted to oldest
-                                            .limit(50) 
-                                            .toArray()
+            .sort({ $natural: -1 }) // sort from most recently inserted to oldest
+            .limit(50)
+            .toArray()
 
         return result
     } catch (error) {
