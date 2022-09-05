@@ -8,11 +8,7 @@ var SCOPES = [
 ]
 
 const firebaseAdmin = admin.initializeApp({
-    credential: admin.credential.cert({
-        "projectId": process.env.PROJECT_ID,
-        "private_key": process.env.PRIVATE_KEY.replace(/\\n/g, '\n'),
-        "client_email": process.env.CLIENT_EMAIL,
-    })
+    credential: admin.credential.cert(JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS))
 })
 
 export function getAdmin() {
