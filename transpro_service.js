@@ -52,7 +52,10 @@ async function processResponse(response) {
 // Get list of order numbers, delivery date, translator pay from list parameter
 async function getListOfOrderNosFromList(list, topic) {
     let allWebOrders = list.map(function (data) {
-        let webOrder = new WebOrder(topic, data.OrderNo, data.DeliveryDate, data.PaymentAmount)
+        let webOrder = new WebOrder(topic, data.OrderNo, data.DeliveryDate, 
+            data.PaymentAmount, data.TranslatorFee, data.OrderStatusName,
+            data.WebOrderTitle, data.DeliveryPlan
+        )
         return webOrder
     })
     return allWebOrders
@@ -75,11 +78,15 @@ function createPushNotifcationDocument(webOrders, topic) {
     }
 
     return webOrders.map((webOrder) => {
-        return { 
-            topic: webOrder.topic, 
-            orderNo: webOrder.orderNo, 
-            deliveryDate: webOrder.deliveryDate, 
-            translatorPay: webOrder.translatorPay 
+        return {
+            topic: webOrder.topic,
+            orderNo: webOrder.orderNo,
+            deliveryDate: webOrder.deliveryDate,
+            translatorPay: webOrder.translatorPay,
+            translatorFee: webOrder.translatorFee,
+            orderStatusName: webOrder.orderStatusName,
+            webOrderTitle: webOrder.webOrderTitle,
+            deliveryPlan: webOrder.deliveryPlan
         }
     })
 }
