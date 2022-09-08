@@ -11,9 +11,4 @@ export class WebOrder {
         this.deliveryDate = deliveryDate
         this.translatorPay = translatorPay
     }
-
-    // TODO: implement formatting
-    formattedDeliveryDate() {
-        return this.deliveryDate
-    }
 }

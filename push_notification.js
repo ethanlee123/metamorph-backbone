@@ -13,10 +13,11 @@ axiosRetry(axios, {
 
 function buildCommonMessage(webOrder) {
     let topic = webOrder.topic
-    let formattedDeliveryDate = formatDate(webOrder.deliveryDate)
     let title = `New Contract - Payout ${CurrencySymbol.Yen}${webOrder.translatorPay}`
-    let body = `Deliver by ${formattedDeliveryDate}`
+    let formattedDate = formatDate(webOrder.deliveryDate)
+    let body = `Deliver by ${formattedDate}`
     let orderNo = webOrder.orderNo
+    
     return {
         'topic': `${topic}`,
         'notification': {
@@ -46,12 +47,6 @@ export async function sendWebOrder(webOrderDetails) {
 export async function sendListOfWebOrders(listOfWebOrderDetails) {
     try {
         listOfWebOrderDetails.forEach(webOrder => {
-            // let webOrderDetails = {
-            //     "title": `New Contract - deliver by ${webOrder.deliveryDate}`,
-            //     "body": `Payout ${webOrder.translatorPay}`,
-            //     "orderNo": webOrder.orderNo,
-            //     "topic": webOrder.topic
-            // }
             sendWebOrder(webOrder)
         })
     } catch(err) {
