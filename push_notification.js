@@ -3,6 +3,7 @@ import axiosRetry from "axios-retry"
 import { BaseError } from "./utils/BaseError.js"
 import { getAdmin } from "./authentication.js"
 import { CurrencySymbol } from "./utils/CurrencySymbols.js"
+import { formatDate } from "./utils/Time.js"
 
 axiosRetry(axios, {
     retries: 3, retryDelay: axiosRetry.exponentialDelay, retryCondition: (error) => {
@@ -12,8 +13,9 @@ axiosRetry(axios, {
 
 function buildCommonMessage(webOrder) {
     let topic = webOrder.topic
+    let formattedDeliveryDate = formatDate(webOrder.deliveryDate)
     let title = `New Contract - Payout ${CurrencySymbol.Yen}${webOrder.translatorPay}`
-    let body = `Deliver by ${webOrder.deliveryDate}`
+    let body = `Deliver by ${formattedDeliveryDate}`
     let orderNo = webOrder.orderNo
     return {
         'topic': `${topic}`,
