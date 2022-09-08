@@ -18,12 +18,14 @@ export async function connectToMongoDb() {
 
 export async function insertMany(docs) {
     if (docs.length == 0) {
+        console.log("No new push notif docs to insert")
         return
     }
 
     try {
         const pushNotifications = metamorphDb.collection("push_notifications")
         const result = await pushNotifications.insertMany(docs)
+        console.log("Succesfully inserted push notif docs")
         return result
     } catch (error) {
         console.log(error)

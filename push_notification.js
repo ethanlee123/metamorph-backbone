@@ -1,6 +1,8 @@
 import axios from "axios"
 import axiosRetry from "axios-retry"
 import { BaseError } from "./utils/BaseError.js"
+import { getAdmin } from "./authentication.js"
+import { CurrencySymbol } from "./utils/CurrencySymbols.js"
 
 axiosRetry(axios, {
     retries: 3, retryDelay: axiosRetry.exponentialDelay, retryCondition: (error) => {
@@ -8,27 +10,30 @@ axiosRetry(axios, {
     }
 })
 
-function buildCommonMessage(topic, title, body) {
+function buildCommonMessage(webOrder) {
+    let topic = webOrder.topic
+    let title = `New Contract - Payout ${CurrencySymbol.Yen}${webOrder.translatorPay}`
+    let body = `Deliver by ${webOrder.deliveryDate}`
+    let orderNo = webOrder.orderNo
     return {
         'topic': `${topic}`,
         'notification': {
-            'title': `${title}`,
-            'body': `${body}`,
+            'title': title,
+            'body': body,
+        },
+        'data': {
+            'orderNo': `${orderNo}`
         }
     }
 }
 
 export async function sendWebOrder(webOrderDetails) {      
-    var commonMessage = buildCommonMessage(
-        webOrderDetails.topic,
-        webOrderDetails.title,
-        webOrderDetails.body
-    )
+    var commonMessage = buildCommonMessage(webOrderDetails)
     console.log(commonMessage)
 
     getAdmin().messaging().send(commonMessage)
         .then(response => {
-            console.log(`Success ${response}`)
+            console.log(`Success sent push notif ${response}`)
             return response
         }, (error) => {
             console.log(`Error sending push notif: ${error}`)
@@ -37,13 +42,18 @@ export async function sendWebOrder(webOrderDetails) {
 }
 
 export async function sendListOfWebOrders(listOfWebOrderDetails) {
-    listOfWebOrderDetails.forEach(webOrder => {
-        let webOrderDetails = {
-            "title": "New Contract Available",
-            "body": "test body",
-            "orderNo": webOrder.orderNo,
-            "topic": webOrder.topic
-        }
-        sendWebOrder(webOrderDetails)
-    })
+    try {
+        listOfWebOrderDetails.forEach(webOrder => {
+            // let webOrderDetails = {
+            //     "title": `New Contract - deliver by ${webOrder.deliveryDate}`,
+            //     "body": `Payout ${webOrder.translatorPay}`,
+            //     "orderNo": webOrder.orderNo,
+            //     "topic": webOrder.topic
+            // }
+            sendWebOrder(webOrder)
+        })
+    } catch(err) {
+        console.error(err)
+        return err
+    }
 }
